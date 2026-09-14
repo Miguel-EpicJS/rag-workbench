@@ -1,11 +1,8 @@
 """SQLite persistence and full-text retrieval."""
 
-from dataclasses import asdict
 import json
 import sqlite3
 from pathlib import Path
-
-from .chunking import Chunk
 
 
 class Store:

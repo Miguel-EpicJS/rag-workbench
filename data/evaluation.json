@@ -1,0 +1,14 @@
+[
+  {
+    "question": "What is required before a production deployment?",
+    "relevant_documents": ["handbook"]
+  },
+  {
+    "question": "How should customer data be handled in logs?",
+    "relevant_documents": ["handbook"]
+  },
+  {
+    "question": "What are the core hours for remote work?",
+    "relevant_documents": ["handbook"]
+  }
+]

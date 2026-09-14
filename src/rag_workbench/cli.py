@@ -3,6 +3,7 @@
 import argparse
 import json
 
+from .evaluation import evaluate
 from .service import RAGService
 from .store import Store
 
@@ -17,6 +18,9 @@ def main() -> None:
     query = subparsers.add_parser("query")
     query.add_argument("question")
     query.add_argument("--limit", type=int, default=5)
+    evaluation = subparsers.add_parser("evaluate")
+    evaluation.add_argument("dataset")
+    evaluation.add_argument("--k", type=int, default=5)
     subparsers.add_parser("stats")
     args = parser.parse_args()
 
@@ -27,6 +31,8 @@ def main() -> None:
             output = service.ingest_file(args.path)
         elif args.command == "query":
             output = service.query(args.question, args.limit)
+        elif args.command == "evaluate":
+            output = evaluate(store, args.dataset, args.k).as_dict()
         else:
             output = store.count()
         print(json.dumps(output, indent=2))

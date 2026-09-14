@@ -87,6 +87,9 @@ uv sync --extra dev
 uv run pytest
 ```
 
+See [docs/experiments.md](docs/experiments.md) for the baseline result and the experiment
+template used for future retrieval changes.
+
 ## Content series
 
 This repository is designed to evolve in public. Each roadmap step can become a technical

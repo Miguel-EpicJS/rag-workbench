@@ -1,5 +1,7 @@
 # RAG Workbench
 
+[![CI](https://github.com/Miguel-EpicJS/rag-workbench/actions/workflows/ci.yml/badge.svg)](https://github.com/Miguel-EpicJS/rag-workbench/actions/workflows/ci.yml)
+
 An inspectable workbench for improving retrieval-augmented generation systems.
 
 This is not another chatbot wrapper. The project makes the retrieval layer visible so each
@@ -70,7 +72,8 @@ curl -X POST http://localhost:8000/query \
 - [x] Section-aware chunking baseline
 - [x] Inspectable lexical retrieval
 - [x] Evidence-first API and CLI
-- [ ] Retrieval evaluation dataset
+- [x] Retrieval evaluation dataset and metrics
+- [x] Continuous integration with linting and tests
 - [ ] Dense embeddings and hybrid rank fusion
 - [ ] Cross-encoder reranking
 - [ ] Contextual chunk enrichment

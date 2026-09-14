@@ -9,7 +9,6 @@ from pydantic import BaseModel
 from .service import RAGService
 from .store import Store
 
-
 app = FastAPI(title="RAG Workbench", version="0.1.0")
 service = RAGService(Store(Path(gettempdir()) / "rag-workbench.db"))
 

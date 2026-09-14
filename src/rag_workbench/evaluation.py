@@ -1,7 +1,7 @@
 """Small retrieval metrics that make baseline comparisons repeatable."""
 
-from dataclasses import dataclass
 import json
+from dataclasses import dataclass
 from pathlib import Path
 
 from .store import Store

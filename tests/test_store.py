@@ -11,6 +11,7 @@ def test_store_ingests_and_retrieves_evidence(tmp_path):
         assert count == 1
         assert results[0]["section"] == "Deployments"
         assert "rollback" in results[0]["text"]
+        assert results[0]["context"].startswith("Document: Engineering Handbook")
     finally:
         store.close()
 

@@ -2,6 +2,7 @@
 
 import hashlib
 import math
+import os
 import re
 
 TOKEN_PATTERN = re.compile(r"[a-z0-9_]+")
@@ -9,6 +10,11 @@ TOKEN_PATTERN = re.compile(r"[a-z0-9_]+")
 
 def tokens(text: str) -> list[str]:
     return TOKEN_PATTERN.findall(text.lower())
+
+
+def contextualize(title: str, section: str, text: str) -> str:
+    """Attach document context while preserving the original chunk for display."""
+    return f"Document: {title}. Section: {section}. Content: {text}"
 
 
 def embed(text: str, dimensions: int = 128) -> list[float]:
@@ -30,7 +36,7 @@ def dense_rank(chunks: list[dict], query: str) -> list[dict]:
     query_vector = embed(query)
     ranked = []
     for chunk in chunks:
-        searchable = f"{chunk['title']} {chunk['section']} {chunk['text']}"
+        searchable = contextualize(chunk["title"], chunk["section"], chunk["text"])
         item = dict(chunk)
         item["score"] = cosine(query_vector, embed(searchable))
         item["method"] = "dense"
@@ -57,11 +63,27 @@ def reciprocal_rank_fusion(*rankings: list[dict], k: int = 60) -> list[dict]:
 
 
 def rerank(query: str, candidates: list[dict]) -> list[dict]:
-    """Apply a transparent lexical overlap pass after broad retrieval."""
+    """Rerank locally, or use a cross-encoder when RERANKER_MODEL is configured."""
+    model_name = os.getenv("RERANKER_MODEL")
+    if model_name:
+        try:
+            from sentence_transformers import CrossEncoder
+        except ImportError as error:
+            raise RuntimeError("Install the embeddings extra to use RERANKER_MODEL") from error
+        model = CrossEncoder(model_name)
+        scores = model.predict([(query, item["text"]) for item in candidates])
+        ranked = []
+        for candidate, score in zip(candidates, scores, strict=True):
+            item = dict(candidate)
+            item["score"] = float(score)
+            item["method"] = "rerank"
+            ranked.append(item)
+        return sorted(ranked, key=lambda item: item["score"], reverse=True)
+
     query_terms = set(tokens(query))
     ranked = []
     for candidate in candidates:
-        text_terms = set(tokens(f"{candidate['title']} {candidate['section']} {candidate['text']}"))
+        text_terms = set(tokens(contextualize(candidate["title"], candidate["section"], candidate["text"])))
         overlap = len(query_terms & text_terms) / max(len(query_terms), 1)
         item = dict(candidate)
         item["score"] = overlap

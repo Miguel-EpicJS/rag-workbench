@@ -16,7 +16,7 @@ def generate_answer(question: str, results: list[dict]) -> str:
         return f"Baseline mode: {first_sentence} [1]"
 
     context = "\n\n".join(
-        f"[{index}] {item['title']} / {item['section']}: {item['text']}"
+        f"[{index}] {item.get('context', item['text'])}"
         for index, item in enumerate(results, start=1)
     )
     payload = {

@@ -4,7 +4,7 @@ import json
 import sqlite3
 from pathlib import Path
 
-from .retrieval import dense_rank, reciprocal_rank_fusion, rerank
+from .retrieval import contextualize, dense_rank, reciprocal_rank_fusion, rerank
 
 
 class Store:
@@ -86,6 +86,7 @@ class Store:
             item = dict(row)
             item["score"] = -item.pop("rank")
             item["method"] = "lexical"
+            item["context"] = contextualize(item["title"], item["section"], item["text"])
             result.append(item)
         return result
 
@@ -93,7 +94,10 @@ class Store:
         rows = self.connection.execute(
             "SELECT id, document_id, title, section, position, text FROM chunks"
         ).fetchall()
-        return [dict(row) for row in rows]
+        return [
+            {**dict(row), "context": contextualize(row["title"], row["section"], row["text"])}
+            for row in rows
+        ]
 
     def search(self, query: str, limit: int = 5, mode: str = "lexical") -> list[dict]:
         if mode not in {"lexical", "dense", "hybrid", "rerank"}:

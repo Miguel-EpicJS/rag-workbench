@@ -15,6 +15,13 @@ The first release is intentionally deterministic. It creates a baseline before a
 advanced techniques such as dense embeddings, hybrid rank fusion, contextual retrieval, and
 neural reranking.
 
+## Visual preview
+
+The UI keeps the generated answer and its retrieved evidence together, making it easier to see
+when a response is grounded in the right document and section.
+
+![RAG Workbench evidence inspection UI](docs/ui-preview.png)
+
 ## Why this project exists
 
 Many RAG failures are blamed on the LLM before anyone inspects the evidence sent to it. RAG
@@ -55,6 +62,12 @@ Start the API with:
 
 ```bash
 uv run uvicorn rag_workbench.api:app --reload
+```
+
+Set `RAG_DB_PATH` when the API should use a specific persistent database:
+
+```bash
+RAG_DB_PATH=demo.db uv run uvicorn rag_workbench.api:app --reload
 ```
 
 Then ingest and query documents with JSON:

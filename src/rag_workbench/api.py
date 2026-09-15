@@ -12,7 +12,8 @@ from .service import RAGService
 from .store import Store
 
 app = FastAPI(title="RAG Workbench", version="0.1.0")
-service = RAGService(Store(Path(gettempdir()) / "rag-workbench.db"))
+database_path = Path(os.getenv("RAG_DB_PATH", Path(gettempdir()) / "rag-workbench.db"))
+service = RAGService(Store(database_path))
 WEB_DIR = Path(os.getenv("RAG_WEB_DIR", Path(__file__).resolve().parents[2] / "web"))
 
 

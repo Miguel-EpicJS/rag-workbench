@@ -16,7 +16,7 @@ function renderEvidence(items) {
   count.textContent = `${items.length} chunk${items.length === 1 ? '' : 's'}`;
   evidence.innerHTML = items.length ? items.map((item, index) => `
     <article class="evidence-card">
-      <div class="card-top"><span>0${index + 1}</span><b>${escapeHtml(item.section)}</b><small>score ${item.rank.toFixed(3)}</small></div>
+      <div class="card-top"><span>0${index + 1}</span><b>${escapeHtml(item.section)}</b><small>rank ${index + 1}</small></div>
       <p>${escapeHtml(item.text)}</p>
       <div class="source">${escapeHtml(item.title)} <span>·</span> position ${item.position}</div>
     </article>

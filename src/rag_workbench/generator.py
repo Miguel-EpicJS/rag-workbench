@@ -2,6 +2,7 @@
 
 import json
 import os
+import re
 from urllib.request import Request, urlopen
 
 
@@ -9,7 +10,10 @@ def generate_answer(question: str, results: list[dict]) -> str:
     """Generate a grounded answer when LLM_BASE_URL is configured."""
     base_url = os.getenv("LLM_BASE_URL")
     if not base_url:
-        return "No LLM configured. Inspect the retrieved evidence below."
+        if not results:
+            return "Baseline mode: no matching evidence was found."
+        first_sentence = re.split(r"(?<=[.!?])\s+", results[0]["text"].strip())[0]
+        return f"Baseline mode: {first_sentence}"
 
     context = "\n\n".join(
         f"[{item['title']} / {item['section']}] {item['text']}" for item in results

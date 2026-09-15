@@ -11,9 +11,8 @@ iteration can be measured:
 documents -> section-aware chunks -> SQLite FTS5 -> ranked evidence -> grounded answer
 ```
 
-The first release is intentionally deterministic. It creates a baseline before adding more
-advanced techniques such as dense embeddings, hybrid rank fusion, contextual retrieval, and
-neural reranking.
+The workbench keeps a deterministic baseline alongside advanced techniques so each change can be
+compared instead of assumed to be better.
 
 ## Visual preview
 
@@ -38,6 +37,8 @@ experiments.
 - Optional OpenAI-compatible generation for Ollama, llama.cpp, or hosted APIs
 - CLI and FastAPI interfaces
 - Browser UI for inspecting retrieved evidence
+- Retrieval mode comparison across lexical, dense, hybrid, and reranked results
+- Citation validation and lightweight grounding checks
 - Terraform deployment for AWS App Runner
 - Tests for chunking, replacement, metadata, and retrieval
 
@@ -89,11 +90,11 @@ curl -X POST http://localhost:8000/query \
 - [x] Evidence-first API and CLI
 - [x] Retrieval evaluation dataset and metrics
 - [x] Continuous integration with linting and tests
-- [ ] Dense embeddings and hybrid rank fusion
-- [ ] Cross-encoder reranking
-- [ ] Contextual chunk enrichment
-- [ ] Citation validation and answer faithfulness checks
-- [ ] Web UI for comparing retrieval experiments
+- [x] Dense embeddings and hybrid rank fusion
+- [x] Cross-encoder reranking (optional local model)
+- [x] Contextual chunk enrichment
+- [x] Citation validation and answer faithfulness checks
+- [x] Web UI for comparing retrieval experiments
 
 ## Development
 

@@ -65,7 +65,7 @@ async function compareModes() {
     comparisonGrid.innerHTML = Object.entries(results).map(([name, result]) => `
       <article class="comparison-card"><div><b>${name}</b><span>${result.retrieved} chunks</span></div>
       <p>${result.evidence[0] ? escapeHtml(result.evidence[0].section) : 'No evidence'}</p>
-      <small>${result.citations.valid ? 'citations valid' : 'evidence only'}</small></article>
+      <small>${result.grounding.grounded ? 'grounding check passed' : 'inspect grounding'}</small></article>
     `).join('');
     comparison.classList.remove('hidden');
     status.textContent = 'Comparison ready';

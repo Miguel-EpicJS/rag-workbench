@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from .generator import generate_answer, validate_citations
+from .generator import generate_answer, validate_citations, validate_grounding
 from .store import Store
 
 
@@ -24,6 +24,7 @@ class RAGService:
             "mode": mode,
             "answer": answer,
             "citations": validate_citations(answer, len(evidence)),
+            "grounding": validate_grounding(answer, evidence),
             "evidence": evidence,
             "retrieved": len(evidence),
         }

@@ -5,6 +5,8 @@ import os
 import re
 from urllib.request import Request, urlopen
 
+from .retrieval import tokens
+
 
 def generate_answer(question: str, results: list[dict]) -> str:
     """Generate a grounded answer when LLM_BASE_URL is configured."""
@@ -46,3 +48,11 @@ def validate_citations(answer: str, evidence_count: int) -> dict:
     references = [int(value) for value in re.findall(r"\[(\d+)\]", answer)]
     valid = bool(references) and all(1 <= reference <= evidence_count for reference in references)
     return {"valid": valid, "references": references}
+
+
+def validate_grounding(answer: str, evidence: list[dict]) -> dict:
+    """Run a lightweight claim-overlap check before accepting an answer as grounded."""
+    claim_terms = set(tokens(re.sub(r"\[\d+\]", "", answer)))
+    evidence_terms = set(tokens(" ".join(item["text"] for item in evidence)))
+    overlap = len(claim_terms & evidence_terms) / max(len(claim_terms), 1)
+    return {"grounded": bool(evidence) and overlap >= 0.5, "term_overlap": round(overlap, 4)}

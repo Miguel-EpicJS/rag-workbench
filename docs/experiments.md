@@ -35,10 +35,12 @@ For each change, record:
 4. Latency and cost impact
 5. Examples of improved and regressed questions
 
-## Planned comparisons
+## Retrieval comparisons
 
-- Baseline FTS5 vs dense embeddings
-- Dense retrieval vs hybrid rank fusion
-- Fixed chunks vs contextualized chunks
-- Top-k retrieval vs reranked top-k
-- Retrieval metrics vs grounded-answer metrics
+- Lexical FTS5, hashed dense embeddings, hybrid rank fusion, and reranked results are available
+  through the CLI and `/compare` API endpoint.
+- Fixed chunks are enriched with document and section context before dense retrieval and answer
+  generation.
+- Answers expose citation validity and a lightweight evidence-term overlap check.
+- The optional `embeddings` extra enables a local sentence-transformers cross-encoder through
+  `RERANKER_MODEL`.

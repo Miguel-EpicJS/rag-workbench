@@ -15,6 +15,8 @@ async def main() -> None:
         await page.locator("#question").fill("What is required before a production deployment?")
         await page.locator("#ask").click()
         await page.locator("#answer:not(.hidden)").wait_for()
+        await page.locator("#compare").click()
+        await page.locator("#comparison:not(.hidden)").wait_for()
         await page.screenshot(path=root / "docs/ui-preview.png", full_page=True)
         await browser.close()
 

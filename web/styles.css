@@ -14,6 +14,9 @@ textarea { width:100%; resize:vertical; border:0; outline:0; background:transpar
 textarea::placeholder { color:#596561; }
 .controls,.section-heading,.card-top,footer { display:flex; justify-content:space-between; align-items:center; }
 .controls { margin-top:24px; padding-top:20px; border-top:1px solid var(--line); color:var(--muted); font:13px ui-monospace,SFMono-Regular,monospace; }
+.mode-control,.actions { display:flex; align-items:center; gap:12px; }
+select { border:1px solid var(--line); border-radius:4px; padding:9px 12px; background:var(--bg); color:var(--ink); font:13px ui-monospace,SFMono-Regular,monospace; }
+.secondary { border:1px solid var(--green); background:transparent; color:var(--green); }
 button { cursor:pointer; border:0; padding:13px 18px; background:var(--green); color:#102014; font-weight:700; border-radius:5px; }
 button:disabled { cursor:wait; opacity:.5; }
 button span { margin-left:12px; font-size:18px; }
@@ -32,6 +35,13 @@ button span { margin-left:12px; font-size:18px; }
 .source { color:var(--muted); letter-spacing:0; text-transform:none; }
 .source span { color:var(--orange); padding:0 7px; }
 .empty { padding:35px 0; color:var(--muted); font:14px ui-monospace,SFMono-Regular,monospace; }
+.comparison { margin-top:30px; }
+.comparison-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+.comparison-card { padding:16px; border:1px solid var(--line); background:rgba(24,32,30,.7); }
+.comparison-card div { display:flex; justify-content:space-between; gap:8px; }
+.comparison-card b { color:var(--green); font:14px ui-monospace,SFMono-Regular,monospace; }
+.comparison-card span,.comparison-card small { color:var(--muted); font:11px ui-monospace,SFMono-Regular,monospace; }
+.comparison-card p { margin:20px 0; font-size:18px; }
 footer { margin-top:70px; padding-top:20px; border-top:1px solid var(--line); color:var(--muted); letter-spacing:0; text-transform:none; }
 .hidden { display:none; }
-@media (max-width:600px) { .shell { width:min(100% - 28px,920px); padding-top:42px; } .intro { margin-bottom:40px; font-size:17px; } .query-card { padding:20px; } textarea { font-size:19px; } .card-top small { font-size:10px; } .evidence-card p { font-size:16px; } }
+@media (max-width:760px) { .shell { width:min(100% - 28px,920px); padding-top:42px; } .intro { margin-bottom:40px; font-size:17px; } .query-card { padding:20px; } textarea { font-size:19px; } .card-top small { font-size:10px; } .evidence-card p { font-size:16px; } .controls,.mode-control,.actions { align-items:stretch; flex-direction:column; } .actions { width:100%; } button { width:100%; } .comparison-grid { grid-template-columns:repeat(2,1fr); } }

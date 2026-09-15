@@ -16,13 +16,20 @@ class RAGService:
         chunks = self.store.add_document(file_path.stem, file_path.name, text)
         return {"document_id": file_path.stem, "title": file_path.name, "chunks": chunks}
 
-    def query(self, question: str, limit: int = 5) -> dict:
-        evidence = self.store.search(question, limit)
+    def query(self, question: str, limit: int = 5, mode: str = "lexical") -> dict:
+        evidence = self.store.search(question, limit, mode)
         answer = generate_answer(question, evidence)
         return {
             "question": question,
+            "mode": mode,
             "answer": answer,
             "citations": validate_citations(answer, len(evidence)),
             "evidence": evidence,
             "retrieved": len(evidence),
+        }
+
+    def compare(self, question: str, limit: int = 5) -> dict:
+        return {
+            mode: self.query(question, limit, mode)
+            for mode in ("lexical", "dense", "hybrid", "rerank")
         }

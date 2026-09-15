@@ -18,9 +18,14 @@
       <label for="question">Ask your knowledge base</label>
       <textarea id="question" rows="3" placeholder="What is required before a production deployment?"></textarea>
       <div class="controls">
-        <span id="status">Ready</span>
-        <button id="ask" type="button">Run retrieval <span>-></span></button>
+        <div class="mode-control"><span id="status">Ready</span><select id="mode" aria-label="Retrieval mode"><option value="lexical">Lexical</option><option value="dense">Dense</option><option value="hybrid">Hybrid</option><option value="rerank">Reranked</option></select></div>
+        <div class="actions"><button id="compare" class="secondary" type="button">Compare modes</button><button id="ask" type="button">Run retrieval <span>-></span></button></div>
       </div>
+    </section>
+
+    <section id="comparison" class="comparison hidden">
+      <div class="section-heading"><div class="section-label">MODE COMPARISON</div><span>same query, four retrievers</span></div>
+      <div id="comparison-grid" class="comparison-grid"></div>
     </section>
 
     <section id="answer" class="answer hidden">

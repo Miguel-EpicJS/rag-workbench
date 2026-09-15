@@ -1,10 +1,14 @@
 const question = document.querySelector('#question');
 const ask = document.querySelector('#ask');
+const compare = document.querySelector('#compare');
+const mode = document.querySelector('#mode');
 const status = document.querySelector('#status');
 const answer = document.querySelector('#answer');
 const answerText = document.querySelector('#answer-text');
 const evidence = document.querySelector('#evidence');
 const count = document.querySelector('#count');
+const comparison = document.querySelector('#comparison');
+const comparisonGrid = document.querySelector('#comparison-grid');
 
 function escapeHtml(value) {
   return value.replace(/[&<>'"]/g, (character) => ({
@@ -31,7 +35,7 @@ async function runQuery() {
   try {
     const response = await fetch('/query', {
       method: 'POST', headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({question: value, limit: 5})
+      body: JSON.stringify({question: value, limit: 5, mode: mode.value})
     });
     if (!response.ok) throw new Error('Query failed');
     const result = await response.json();
@@ -46,7 +50,34 @@ async function runQuery() {
   }
 }
 
+async function compareModes() {
+  const value = question.value.trim();
+  if (!value) return;
+  compare.disabled = true;
+  status.textContent = 'Comparing...';
+  try {
+    const response = await fetch('/compare', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({question: value, limit: 3})
+    });
+    if (!response.ok) throw new Error('Comparison failed');
+    const results = await response.json();
+    comparisonGrid.innerHTML = Object.entries(results).map(([name, result]) => `
+      <article class="comparison-card"><div><b>${name}</b><span>${result.retrieved} chunks</span></div>
+      <p>${result.evidence[0] ? escapeHtml(result.evidence[0].section) : 'No evidence'}</p>
+      <small>${result.citations.valid ? 'citations valid' : 'evidence only'}</small></article>
+    `).join('');
+    comparison.classList.remove('hidden');
+    status.textContent = 'Comparison ready';
+  } catch (error) {
+    status.textContent = error.message;
+  } finally {
+    compare.disabled = false;
+  }
+}
+
 ask.addEventListener('click', runQuery);
+compare.addEventListener('click', compareModes);
 question.addEventListener('keydown', (event) => {
   if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') runQuery();
 });

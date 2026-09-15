@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RAG Workbench</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <p class="eyebrow">RAG / WORKBENCH</p>
+      <h1>Inspect the evidence<br><em>behind the answer.</em></h1>
+      <p class="intro">A small, transparent workspace for testing retrieval before blaming the model.</p>
+    </header>
+
+    <section class="query-card">
+      <label for="question">Ask your knowledge base</label>
+      <textarea id="question" rows="3" placeholder="What is required before a production deployment?"></textarea>
+      <div class="controls">
+        <span id="status">Ready</span>
+        <button id="ask" type="button">Run retrieval <span>-></span></button>
+      </div>
+    </section>
+
+    <section id="answer" class="answer hidden">
+      <div class="section-label">ANSWER</div>
+      <p id="answer-text"></p>
+    </section>
+
+    <section>
+      <div class="section-heading">
+        <div class="section-label">RETRIEVED EVIDENCE</div>
+        <span id="count">0 chunks</span>
+      </div>
+      <div id="evidence" class="evidence">
+        <div class="empty">Run a question to inspect the retrieved chunks.</div>
+      </div>
+    </section>
+
+    <footer><span>SQLite FTS5 baseline</span><span>RAG Workbench 0.1</span></footer>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

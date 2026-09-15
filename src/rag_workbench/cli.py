@@ -18,6 +18,7 @@ def main() -> None:
     query = subparsers.add_parser("query")
     query.add_argument("question")
     query.add_argument("--limit", type=int, default=5)
+    query.add_argument("--mode", choices=("lexical", "dense", "hybrid", "rerank"), default="lexical")
     evaluation = subparsers.add_parser("evaluate")
     evaluation.add_argument("dataset")
     evaluation.add_argument("--k", type=int, default=5)
@@ -30,7 +31,7 @@ def main() -> None:
         if args.command == "ingest":
             output = service.ingest_file(args.path)
         elif args.command == "query":
-            output = service.query(args.question, args.limit)
+            output = service.query(args.question, args.limit, args.mode)
         elif args.command == "evaluate":
             output = evaluate(store, args.dataset, args.k).as_dict()
         else:

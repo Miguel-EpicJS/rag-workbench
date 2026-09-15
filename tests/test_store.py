@@ -24,3 +24,17 @@ def test_replacing_document_does_not_duplicate_chunks(tmp_path):
         assert store.search("new text")[0]["text"] == "new text"
     finally:
         store.close()
+
+
+def test_store_supports_dense_hybrid_and_rerank_modes(tmp_path):
+    store = Store(tmp_path / "test.db")
+    try:
+        store.add_document("deploy", "Deployments", "# Release\nUse a rollback plan before deploy.")
+        store.add_document("security", "Security", "# Access\nUse multi-factor authentication.")
+        for mode in ("dense", "hybrid", "rerank"):
+            results = store.search("rollback deploy", mode=mode)
+            assert results
+            assert results[0]["document_id"] == "deploy"
+            assert results[0]["method"] == mode
+    finally:
+        store.close()

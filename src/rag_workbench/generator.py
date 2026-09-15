@@ -13,10 +13,11 @@ def generate_answer(question: str, results: list[dict]) -> str:
         if not results:
             return "Baseline mode: no matching evidence was found."
         first_sentence = re.split(r"(?<=[.!?])\s+", results[0]["text"].strip())[0]
-        return f"Baseline mode: {first_sentence}"
+        return f"Baseline mode: {first_sentence} [1]"
 
     context = "\n\n".join(
-        f"[{item['title']} / {item['section']}] {item['text']}" for item in results
+        f"[{index}] {item['title']} / {item['section']}: {item['text']}"
+        for index, item in enumerate(results, start=1)
     )
     payload = {
         "model": os.getenv("LLM_MODEL", "local-model"),
@@ -24,7 +25,7 @@ def generate_answer(question: str, results: list[dict]) -> str:
         "messages": [
             {
                 "role": "system",
-                "content": "Answer only from the supplied evidence. If it is insufficient, say so.",
+                "content": "Answer only from the supplied evidence. Cite claims with [n]. If it is insufficient, say so.",
             },
             {"role": "user", "content": f"Question: {question}\n\nEvidence:\n{context}"},
         ],
@@ -38,3 +39,10 @@ def generate_answer(question: str, results: list[dict]) -> str:
     with urlopen(request, timeout=60) as response:
         body = json.loads(response.read())
     return body["choices"][0]["message"]["content"]
+
+
+def validate_citations(answer: str, evidence_count: int) -> dict:
+    """Validate that citations point to evidence returned for this answer."""
+    references = [int(value) for value in re.findall(r"\[(\d+)\]", answer)]
+    valid = bool(references) and all(1 <= reference <= evidence_count for reference in references)
+    return {"valid": valid, "references": references}

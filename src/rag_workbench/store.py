@@ -4,6 +4,8 @@ import json
 import sqlite3
 from pathlib import Path
 
+from .retrieval import dense_rank, reciprocal_rank_fusion, rerank
+
 
 class Store:
     def __init__(self, path: str | Path = "rag-workbench.db") -> None:
@@ -64,7 +66,7 @@ class Store:
         self.connection.commit()
         return len(created)
 
-    def search(self, query: str, limit: int = 5) -> list[dict]:
+    def _lexical_search(self, query: str, limit: int = 20) -> list[dict]:
         if not query.strip():
             return []
         safe_query = " OR ".join(f'"{token}"' for token in query.split() if token.strip())
@@ -79,7 +81,32 @@ class Store:
             """,
             (safe_query, limit),
         ).fetchall()
+        result = []
+        for row in rows:
+            item = dict(row)
+            item["score"] = -item.pop("rank")
+            item["method"] = "lexical"
+            result.append(item)
+        return result
+
+    def _all_chunks(self) -> list[dict]:
+        rows = self.connection.execute(
+            "SELECT id, document_id, title, section, position, text FROM chunks"
+        ).fetchall()
         return [dict(row) for row in rows]
+
+    def search(self, query: str, limit: int = 5, mode: str = "lexical") -> list[dict]:
+        if mode not in {"lexical", "dense", "hybrid", "rerank"}:
+            raise ValueError("mode must be lexical, dense, hybrid, or rerank")
+        lexical = self._lexical_search(query)
+        if mode == "lexical":
+            return lexical[:limit]
+        dense = dense_rank(self._all_chunks(), query)
+        if mode == "dense":
+            return dense[:limit]
+        fused = reciprocal_rank_fusion(lexical, dense)
+        ranked = rerank(query, fused) if mode == "rerank" else fused
+        return ranked[:limit]
 
     def count(self) -> dict[str, int]:
         return {

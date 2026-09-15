@@ -6,8 +6,15 @@ def test_baseline_answer_is_explicitly_extractive():
         "What is required before deployment?",
         [{"text": "A passing test suite is required. A rollback plan is also required."}],
     )
-    assert answer == "Baseline mode: A passing test suite is required."
+    assert answer == "Baseline mode: A passing test suite is required. [1]"
 
 
 def test_baseline_answer_handles_missing_evidence():
     assert generate_answer("unknown", []) == "Baseline mode: no matching evidence was found."
+
+
+def test_citations_are_checked_against_evidence():
+    from rag_workbench.generator import validate_citations
+
+    assert validate_citations("A claim [1].", 1) == {"valid": True, "references": [1]}
+    assert validate_citations("A claim [2].", 1)["valid"] is False

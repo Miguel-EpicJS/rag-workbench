@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from .generator import generate_answer
+from .generator import generate_answer, validate_citations
 from .store import Store
 
 
@@ -18,9 +18,11 @@ class RAGService:
 
     def query(self, question: str, limit: int = 5) -> dict:
         evidence = self.store.search(question, limit)
+        answer = generate_answer(question, evidence)
         return {
             "question": question,
-            "answer": generate_answer(question, evidence),
+            "answer": answer,
+            "citations": validate_citations(answer, len(evidence)),
             "evidence": evidence,
             "retrieved": len(evidence),
         }

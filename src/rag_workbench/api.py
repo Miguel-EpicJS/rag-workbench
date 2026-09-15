@@ -26,6 +26,7 @@ class DocumentInput(BaseModel):
 class QueryInput(BaseModel):
     question: str
     limit: int = 5
+    mode: str = "lexical"
 
 
 @app.get("/health")
@@ -43,7 +44,14 @@ def add_document(document: DocumentInput) -> dict:
 def query(request: QueryInput) -> dict:
     if not request.question.strip():
         raise HTTPException(status_code=400, detail="question cannot be empty")
-    return service.query(request.question, min(max(request.limit, 1), 20))
+    return service.query(request.question, min(max(request.limit, 1), 20), request.mode)
+
+
+@app.post("/compare")
+def compare(request: QueryInput) -> dict:
+    if not request.question.strip():
+        raise HTTPException(status_code=400, detail="question cannot be empty")
+    return service.compare(request.question, min(max(request.limit, 1), 20))
 
 
 if WEB_DIR.exists():

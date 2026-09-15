@@ -30,7 +30,7 @@ resource "aws_iam_role_policy_attachment" "apprunner_ecr_access" {
 resource "aws_apprunner_service" "app" {
   service_name = var.service_name
 
-  auto_scaling_configuration_arn = aws_apprunner_auto_scaling_configuration.app.arn
+  auto_scaling_configuration_arn = aws_apprunner_auto_scaling_configuration_version.app.arn
 
   source_configuration {
     auto_deployments_enabled = false
@@ -44,7 +44,7 @@ resource "aws_apprunner_service" "app" {
       image_repository_type = "ECR"
 
       image_configuration {
-        port                          = "8000"
+        port = "8000"
         runtime_environment_variables = {
           LLM_BASE_URL = var.llm_base_url
           LLM_MODEL    = var.llm_model
@@ -71,7 +71,7 @@ resource "aws_apprunner_service" "app" {
   depends_on = [aws_iam_role_policy_attachment.apprunner_ecr_access]
 }
 
-resource "aws_apprunner_auto_scaling_configuration" "app" {
+resource "aws_apprunner_auto_scaling_configuration_version" "app" {
   auto_scaling_configuration_name = "${var.service_name}-scaling"
   max_concurrency                 = 50
   max_size                        = 2

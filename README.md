@@ -30,6 +30,8 @@ experiments.
 - Evidence-first query responses
 - Optional OpenAI-compatible generation for Ollama, llama.cpp, or hosted APIs
 - CLI and FastAPI interfaces
+- Browser UI for inspecting retrieved evidence
+- Terraform deployment for AWS App Runner
 - Tests for chunking, replacement, metadata, and retrieval
 
 ## Quick start
@@ -89,6 +91,9 @@ uv run pytest
 
 See [docs/experiments.md](docs/experiments.md) for the baseline result and the experiment
 template used for future retrieval changes.
+
+The browser UI runs with `uv run uvicorn rag_workbench.api:app --reload`. See
+[terraform/README.md](terraform/README.md) for the AWS App Runner deployment path.
 
 ## Content series
 
